@@ -1,14 +1,45 @@
 {
-  "name": "homie-config",
-  "version": "1.0.2",
-  "description": "Use the Homie Configuration API to setup a homie board. This is an alternative to using the web configuration interface and the Android app. You could use this to setup lots of boards if you needed or design your own web interface.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "_from": "homie-config",
+  "_id": "homie-config@1.0.2",
+  "_inBundle": false,
+  "_integrity": "sha1-laa7h3TwOGwWfR+H3UFpRjVNIQo=",
+  "_location": "/homie-config",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "homie-config",
+    "name": "homie-config",
+    "escapedName": "homie-config",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://www.github.com/hongkongkiwi/node-homie-config"
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/homie-config/-/homie-config-1.0.2.tgz",
+  "_shasum": "95a6bb8774f0386c167d1f87dd416946354d210a",
+  "_spec": "homie-config",
+  "_where": "/Users/myles/cloud/dev/mistandmore/fogir/src",
+  "author": {
+    "name": "Andy Savage",
+    "email": "andy@savage.hk",
+    "url": "http://andy.savage.hk"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "bluebird": "^3.4.0",
+    "http-errors": "^1.5.0",
+    "request": "^2.72.0",
+    "underscore": "^1.8.3"
+  },
+  "deprecated": false,
+  "description": "Use the Homie Configuration API to setup a homie board. This is an alternative to using the web configuration interface and the Android app. You could use this to setup lots of boards if you needed or design your own web interface.",
+  "devDependencies": {
+    "network": "^0.2.0",
+    "simple-json-store": "0.0.1"
   },
   "keywords": [
     "homie",
@@ -16,16 +47,15 @@
     "arduino",
     "esp8266"
   ],
-  "author": "Andy Savage <andy@savage.hk> (http://andy.savage.hk)",
   "license": "MIT",
-  "dependencies": {
-    "bluebird": "^3.4.0",
-    "http-errors": "^1.5.0",
-    "request": "^2.72.0",
-    "underscore": "^1.8.3"
+  "main": "index.js",
+  "name": "homie-config",
+  "repository": {
+    "type": "git",
+    "url": "https://www.github.com/hongkongkiwi/node-homie-config"
   },
-  "devDependencies": {
-    "network": "^0.2.0",
-    "simple-json-store": "0.0.1"
-  }
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.0.2"
 }

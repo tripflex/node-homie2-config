@@ -62,9 +62,7 @@ HomieConfig.prototype.getHeartBeat = function(callback) {
   //
   // Response
   //
-  // 200 OK (application/json)
-  //
-  // { "heart": "beat" }
+  // 204 No Content
 
   var options = {
     method: 'GET',
@@ -73,7 +71,7 @@ HomieConfig.prototype.getHeartBeat = function(callback) {
 
   this.r(options, function(err, response, body) {
       if (err) return callback(err);
-      if (response.statusCode === 200 && body && body.hasOwnProperty('heart') && body.heart === 'beat') {
+      if (response.statusCode === 204 ) {
         return callback(null, true);
       } else if (response.statusCode === 404) {
         callback(new HeartBeatError('Detected wrong heartbeat!'));
@@ -168,7 +166,7 @@ HomieConfig.prototype.getNetworks = function(callback) {
 /*
 * Helpful synchronous method to generate a config object.
 */
-HomieConfig.prototype.generateConfig = function(device_name, device_id, wifi_ssid, wifi_password, mqtt_host, mqtt_options, ota, callback) {
+HomieConfig.prototype.generateConfig = function(device_name, device_id, wifi_ssid, wifi_password, mqtt_host, mqtt_options, ota, callback, custom_settings) {
   if (!wifi_password) throw new InvalidArgumentError('wifi_password is empty');
   if (!mqtt_host) throw new InvalidArgumentError('mqtt_host is empty');
 
@@ -200,6 +198,10 @@ HomieConfig.prototype.generateConfig = function(device_name, device_id, wifi_ssi
       "fingerprint": ota && ota.fingerprint ? ota.fingerprint : null
     }
   };
+
+  if( custom_settings ){
+      config.settings = custom_settings;
+  }
 
   delete_null_properties(config, true);
   if (!config.hasOwnProperty('name')) {
@@ -249,6 +251,7 @@ HomieConfig.prototype.saveConfig = function(config, callback) {
   var options = {
     method: 'PUT',
     url: '/config',
+    body: JSON.stringify( config )
   };
 
   this.r(options, function(err, response, body) {
@@ -269,7 +272,7 @@ HomieConfig.prototype.saveConfig = function(config, callback) {
 * Initiates the connection of the device to the wifi network while in config mode. This request is not synchronous and the result (wifi connected or not) must be obtained by "/wifi-status".
 */
 HomieConfig.prototype.connectToWifi = function(ssid, password, callback) {
-  // POST /wifi-connect
+  // GET /wifi/connect
   //
   // Request params
   //
@@ -288,9 +291,9 @@ HomieConfig.prototype.connectToWifi = function(ssid, password, callback) {
   // { "success": false, "error": "[Reason why the payload is invalid]" }
 
   var options = {
-    method: 'POST',
-    url: '/wifi-connect',
-    form: {ssid: ssid, password: password},
+    method: 'GET',
+    url: '/wifi/connect',
+    body: JSON.stringify( {ssid: ssid, password: password} ),
   };
 
   this.r(options, function(err, response, body) {
@@ -310,7 +313,16 @@ HomieConfig.prototype.connectToWifi = function(ssid, password, callback) {
 * Helpful when monitoring Wifi connectivity after sending ssid/password and waiting for an answer.
 */
 HomieConfig.prototype.getWifiStatus = function(callback) {
-  // GET /wifi-status
+  // GET /wifi/status
+  //
+  // Possible status values
+
+  // idle
+  // connect_failed
+  // connection_lost
+  // no_ssid_available
+  // connected (along with a local_ip field)
+  // disconnected
   //
   // Response
   //
@@ -321,7 +333,7 @@ HomieConfig.prototype.getWifiStatus = function(callback) {
 
   var options = {
     method: 'GET',
-    url: '/wifi-status',
+    url: '/wifi/status',
   };
 
   this.r(options, function(err, response, body) {
@@ -345,7 +357,7 @@ HomieConfig.prototype.getWifiStatus = function(callback) {
 * Important: The http request and responses must be kept as small as possible because all contents are transported using ram memory, which is very limited.
 */
 HomieConfig.prototype.setTransparentWifiProxy = function(enabled, callback) {
-  // POST /proxy-control
+  // PUT /proxy/control
   //
   // Request params
   //
@@ -356,18 +368,27 @@ HomieConfig.prototype.setTransparentWifiProxy = function(enabled, callback) {
   // In case of success:
   // 200 OK (application/json)
   //
-  // { "message": "[proxy-enabled|proxy-disabled]" }
+  //   {
+  //       "success": true
+  //   }
+  // 400 Bad Request (application/json)
+  //   {
+  //       "success": false,
+  //       "error": "Reason why the payload is invalid"
+  //   }
 
   var options = {
-    method: 'POST',
-    url: '/proxy-control',
-    form: {'enable': enabled ? true : false},
+    method: 'PUT',
+    url: '/proxy/control',
+    body: JSON.stringify( {'enable': enabled ? true : false} ),
   };
 
   this.r(options, function(err, response, body) {
       if (err) return callback(err);
-      if (response.statusCode === 200 && body && body.hasOwnProperty('message')) {
+      if (response.statusCode === 200 && body && body.hasOwnProperty('success')) {
         callback(null, body.message);
+      } else if (response.statusCode === 400 && body && body.hasOwnProperty('success') && body.hasOwnProperty('error')) {
+        callback(createError(400, body.error), false);
       } else {
         callback(createError(response.statusCode), null);
       }
