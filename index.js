@@ -272,7 +272,7 @@ HomieConfig.prototype.saveConfig = function(config, callback) {
 * Initiates the connection of the device to the wifi network while in config mode. This request is not synchronous and the result (wifi connected or not) must be obtained by "/wifi-status".
 */
 HomieConfig.prototype.connectToWifi = function(ssid, password, callback) {
-  // GET /wifi/connect
+  // PUT /wifi/connect
   //
   // Request params
   //
@@ -291,7 +291,7 @@ HomieConfig.prototype.connectToWifi = function(ssid, password, callback) {
   // { "success": false, "error": "[Reason why the payload is invalid]" }
 
   var options = {
-    method: 'GET',
+    method: 'PUT',
     url: '/wifi/connect',
     body: JSON.stringify( {ssid: ssid, password: password} ),
   };
