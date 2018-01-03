@@ -16,7 +16,7 @@ var HeartBeatError = require('./lib/HeartBeatError'),
 */
 var HomieConfig = function(options) {
   this.options = _.extendOwn({
-    url: '192.168.1.1',
+    url: '192.168.123.1',
     userAgent: 'HomieConfig Node.js',
     requestTimeout: 2000,
     promise: Promise
