@@ -1,6 +1,6 @@
-var HomieConfig = require('../index.js');
+var Homie2Config = require('../index.js');
 
-var homie = new HomieConfig();
+var homie2 = new Homie2Config();
 
 var device_name = "Example Device Name", // We can set this,
     //device_name = null, // Or if null a default one will be set
@@ -13,7 +13,7 @@ var device_name = "Example Device Name", // We can set this,
     mqtt_options = null, // Pass null if you don't want to set more options
     ota = null; // Pass null if you don't want to set these options
 
-var config = homie.generateConfig(device_name,
+var config = homie2.generateConfig(device_name,
                     device_id,
                     wifi_ssid,
                     wifi_password,

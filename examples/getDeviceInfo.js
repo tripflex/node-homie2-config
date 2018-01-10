@@ -1,13 +1,13 @@
-var HomieConfig = require('../index.js');
+var Homie2Config = require('../index.js');
 
-var homie = new HomieConfig();
+var homie2 = new Homie2Config();
 
-homie.getHeartBeatAsync()
+homie2.getHeartBeatAsync()
   .then(function(isAlive) {
     if (!isAlive) {
       console.log("Oh no, we don't have a heartbeat! Please check the server url " + this.baseUrl);
     }
-    return homie.getDeviceInfoAsync();
+    return homie2.getDeviceInfoAsync();
   }).then(function(deviceInfo) {
     console.log('Device Info', deviceInfo);
   }).catch(function (error) {

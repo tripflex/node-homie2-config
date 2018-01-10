@@ -14,10 +14,10 @@ var HeartBeatError = require('./lib/HeartBeatError'),
 /*
 * Constructure method fwhich takes an optional homieUrl and some options
 */
-var HomieConfig = function(options) {
+var Homie2Config = function(options) {
   this.options = _.extendOwn({
     url: '192.168.123.1',
-    userAgent: 'HomieConfig Node.js',
+    userAgent: 'Homie2Config Node.js',
     requestTimeout: 2000,
     promise: Promise
   }, options);
@@ -50,14 +50,14 @@ var HomieConfig = function(options) {
   this.generateConfig = this.options.promise.promisify(this.generateConfig);
 };
 
-HomieConfig.prototype.moduleSettings = function() {
+Homie2Config.prototype.moduleSettings = function() {
   return this.options;
 };
 
 /*
 * This is useful to ensure we are connected to the device AP.
 */
-HomieConfig.prototype.getHeartBeat = function(callback) {
+Homie2Config.prototype.getHeartBeat = function(callback) {
   // GET /heart
   //
   // Response
@@ -76,7 +76,7 @@ HomieConfig.prototype.getHeartBeat = function(callback) {
       } else if (response.statusCode === 404) {
         callback(new HeartBeatError('Detected wrong heartbeat!'));
       } else {
-        callback(createError(response.statusCode, 'blah'), false);
+        callback(createError(response.statusCode, 'Error getting heartbeat'), false);
       }
   });
 };
@@ -84,7 +84,7 @@ HomieConfig.prototype.getHeartBeat = function(callback) {
 /*
 * Get some information on the device.
 */
-HomieConfig.prototype.getDeviceInfo = function(callback) {
+Homie2Config.prototype.getDeviceInfo = function(callback) {
   // GET /device-info
   //
   // Response
@@ -124,7 +124,7 @@ HomieConfig.prototype.getDeviceInfo = function(callback) {
 /*
 * Retrieve the Wi-Fi networks the device can see.
 */
-HomieConfig.prototype.getNetworks = function(callback) {
+Homie2Config.prototype.getNetworks = function(callback) {
   // GET /networks
   //
   // Response
@@ -166,7 +166,7 @@ HomieConfig.prototype.getNetworks = function(callback) {
 /*
 * Helpful synchronous method to generate a config object.
 */
-HomieConfig.prototype.generateConfig = function(device_name, device_id, wifi_ssid, wifi_password, mqtt_host, mqtt_options, ota, callback, custom_settings) {
+Homie2Config.prototype.generateConfig = function(device_name, device_id, wifi_ssid, wifi_password, mqtt_host, mqtt_options, ota, callback, custom_settings) {
   if (!wifi_password) throw new InvalidArgumentError('wifi_password is empty');
   if (!mqtt_host) throw new InvalidArgumentError('mqtt_host is empty');
 
@@ -224,7 +224,7 @@ HomieConfig.prototype.generateConfig = function(device_name, device_id, wifi_ssi
 /*
 * Save the config to the device.
 */
-HomieConfig.prototype.saveConfig = function(config, callback) {
+Homie2Config.prototype.saveConfig = function(config, callback) {
   // PUT /config
   //
   // Request body
@@ -271,7 +271,7 @@ HomieConfig.prototype.saveConfig = function(config, callback) {
 /*
 * Initiates the connection of the device to the wifi network while in config mode. This request is not synchronous and the result (wifi connected or not) must be obtained by "/wifi-status".
 */
-HomieConfig.prototype.connectToWifi = function(ssid, password, callback) {
+Homie2Config.prototype.connectToWifi = function(ssid, password, callback) {
   // PUT /wifi/connect
   //
   // Request params
@@ -312,7 +312,7 @@ HomieConfig.prototype.connectToWifi = function(ssid, password, callback) {
 * Returns the current wifi connection status.
 * Helpful when monitoring Wifi connectivity after sending ssid/password and waiting for an answer.
 */
-HomieConfig.prototype.getWifiStatus = function(callback) {
+Homie2Config.prototype.getWifiStatus = function(callback) {
   // GET /wifi/status
   //
   // Possible status values
@@ -356,7 +356,7 @@ HomieConfig.prototype.getWifiStatus = function(callback) {
 *
 * Important: The http request and responses must be kept as small as possible because all contents are transported using ram memory, which is very limited.
 */
-HomieConfig.prototype.setTransparentWifiProxy = function(enabled, callback) {
+Homie2Config.prototype.setTransparentWifiProxy = function(enabled, callback) {
   // PUT /proxy/control
   //
   // Request params
@@ -409,4 +409,4 @@ function delete_null_properties(test, recurse) {
     }
 }
 
-module.exports = HomieConfig;
+module.exports = Homie2Config;

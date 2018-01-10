@@ -1,4 +1,4 @@
-var HomieConfig = require('../index.js');
+var Homie2Config = require('../index.js');
 var readlineSync = require('readline-sync');
 var _ = require('underscore');
 var Promise = require('bluebird');
@@ -7,20 +7,20 @@ var network = require('network');
 var configSettingsFile = './configSettings.json';
 var store = new SimpleJsonStore(configSettingsFile, {});
 
-var homie;
+var homie2;
 
 console.log('Checking if board is alive...');
 
 var getGatewayIpAsync = Promise.promisify(network.get_gateway_ip);
 
 var p = getGatewayIpAsync().then(function(ip) {
-        var homie_ip = readlineSync.question('Enter Homie IP [' + ip + ']: ', {defaultInput: ip});
-        homie = new HomieConfig({url: homie_ip, promise: Promise});
-        return homie.getHeartBeatAsync();
+        var homie2_ip = readlineSync.question('Enter Homie IP [' + ip + ']: ', {defaultInput: ip});
+        homie2 = new Homie2Config({url: homie2_ip, promise: Promise});
+        return homie2.getHeartBeatAsync();
     }).then(function() {
         console.log('-> Homie Board is alive');
         console.log('-> Getting Board Info');
-        return homie.getDeviceInfoAsync();
+        return homie2.getDeviceInfoAsync();
     }).then(function(deviceInfo) {
         var config = store.get('config') ? store.get('config') : {};
         if (!config.device_id) {
@@ -28,7 +28,7 @@ var p = getGatewayIpAsync().then(function(ip) {
         }
         store.set('config', config);
         console.log('-> Scanning wifi networks using Homie board');
-        return homie.getNetworksAsync();
+        return homie2.getNetworksAsync();
     }).then(function(networks) {
         networks = _.map(networks.networks, function(network) {
                 return network.ssid;
@@ -73,7 +73,7 @@ var p = getGatewayIpAsync().then(function(ip) {
                 enabled: true
             };
         }
-        return homie.generateConfig(device_name,
+        return homie2.generateConfig(device_name,
                             device_id,
                             network_ssid,
                             wifi_password,
@@ -89,7 +89,7 @@ var p = getGatewayIpAsync().then(function(ip) {
         console.log(config);
         if (readlineSync.keyInYN('Flash this config to the board?')) {
             console.log('-> Saving JSON Config to Homie Board...');
-            return homie.saveConfig(config);
+            return homie2.saveConfig(config);
         } else {
             p.cancel();
         }
@@ -97,7 +97,7 @@ var p = getGatewayIpAsync().then(function(ip) {
         var config = store.get('config', config);
         if (readlineSync.keyInYN('Connect Homie to \"' + config.wifi.ssid + '\" now?')) {
             console.log('-> Connecting to Wifi...');
-            return homie.connectToWifi(config.wifi.ssid, config.wifi.password);
+            return homie2.connectToWifi(config.wifi.ssid, config.wifi.password);
         } else {
             p.cancel();
         }

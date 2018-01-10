@@ -1,32 +1,32 @@
-# HomieConfig
+# Homie2Config
 
-HomieConfig is a node.js module to configure esp8266 boards loaded with [Homie firmware](https://github.com/marvinroger/homie-esp8266).
+Homie2Config is a node.js module to configure esp8266 boards loaded with [Homie firmware](https://github.com/marvinroger/homie-esp8266).
 
-It seems the only options are a web-based interface or an Android app. I wasn't very happy with this so I created a node.js module so I could configure one or more boards easily.
+This is for Homie version 2.0+, original codebase from [HomieConfig](https://github.com/hongkongkiwi/node-homie-config)
 
 ## QuickStart
 
-You can grab homie-config from npm.
+You can grab homie2-config from npm.
 
-`npm install --save homie-config`
+`npm install --save homie2-config`
 
 Make sure to set an ip address or hostname for the board. By default, homie.local is used in case you don't pass anything.
 
 ```javascript
-var HomieConfig = require('homie-config');
+var Homie2Config = require('homie2-config');
 
-var homie = new HomieConfig();
+var homie2 = new Homie2Config();
 ```
 
 If you want to set the url you can do it this way:
 
-`var homie = new HomieConfig({url: 'homie.local'});`
+`var homie2 = new Homie2Config({url: 'homie.local'});`
 
 Traditional Callbacks
 
 ```javascript
 // You can choose to use traditional callbacks
-homie.getHeartBeat(function(isAlive) {
+homie2.getHeartBeat(function(isAlive) {
   if (!isAlive) {
     return console.log("Oh no, we don't have a heartbeat!");
   }
@@ -37,7 +37,7 @@ homie.getHeartBeat(function(isAlive) {
 Promises are also supported by attaching (async) to method names
 
 ```javascript
-homie.getHeartBeatAsync()
+homie2.getHeartBeatAsync()
   .then(function(isAlive) {
     if (!isAlive) {
       console.log("Oh no, we don't have a heartbeat! Please check the server url " + this.baseUrl);
@@ -48,15 +48,15 @@ homie.getHeartBeatAsync()
   });
 ```
 
-You can chain up the methods easily using promises. I recommend you always use getHeartBeat before otehr methods.
+You can chain up the methods easily using promises. I recommend you always use getHeartBeat before other methods.
 
 ```javascript
-homie.getHeartBeatAsync()
+homie2.getHeartBeatAsync()
   .then(function(isAlive) {
     if (!isAlive) {
       console.log("Oh no, we don't have a heartbeat! Please check the server url " + this.baseUrl);
     }
-    return homie.getDeviceInfoAsync();
+    return homie2.getDeviceInfoAsync();
   }).then(function(deviceInfo) {
     console.log('Device Info', deviceInfo);
   }).catch(function (error) {
@@ -64,7 +64,12 @@ homie.getHeartBeatAsync()
   });
 ```
 
-Please find more examples in the [examples directory](https://github.com/hongkongkiwi/node-homie-config/tree/master/examples).
+Please find more examples in the [examples directory](https://github.com/tripflex/node-homie2-config/tree/master/examples).
+
+## Meteor Package
+There is also a Meteor Package available that uses this npm module, and includes numerous other Homie helper methods:
+
+[https://github.com/tripflex/meteor-homie](https://github.com/tripflex/meteor-homie)
 
 ## Configuration Wizard
 
@@ -74,7 +79,7 @@ In the examples directory run node ./configWizard.js
 
 ## Supported Methods
 
-The library supports all [current Configuration API functions](https://github.com/marvinroger/homie-esp8266/blob/master/docs/6.-Configuration-API.md).
+The library supports all [current Configuration API functions](http://marvinroger.github.io/homie-esp8266/docs/2.0.0-beta.3/configuration/http-json-api/).
 
 These require the board to be accessible.
 
@@ -89,18 +94,5 @@ These require the board to be accessible.
 
 ## Contributing
 
-Feel free to submit any pull requests or add functionality, I'm usually pretty responsive.
-
-If you like the module, please consider donating some bitcoin or litecoin.
-
-__Bitcoin__
-
-![BTC QR Code](http://i.imgur.com/9rsCfv5.png?1)
-
-1DJsQhquTjUakES5Pddh94t1XSMb7LDYyh
-
-__LiteCoin__
-
-![LTC QR Code](http://i.imgur.com/yF1RoHp.png?1)
-
-LNzdZksXcCF6qXbuiQpHPQ7LUeHuWa8dDW
+Feel free to submit any pull requests or add functionality, and check out the Meteor Package that includes this module, as well as numerous other helper methods:
+[https://github.com/tripflex/meteor-homie](https://github.com/tripflex/meteor-homie)
