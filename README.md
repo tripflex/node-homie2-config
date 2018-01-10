@@ -10,7 +10,7 @@ You can grab homie2-config from npm.
 
 `npm install --save homie2-config`
 
-Make sure to set an ip address or hostname for the board. By default, homie.local is used in case you don't pass anything.
+Make sure to set an ip address or hostname for the board. By default, `192.168.123.1` is used in case you don't pass anything.
 
 ```javascript
 var Homie2Config = require('homie2-config');
@@ -18,7 +18,7 @@ var Homie2Config = require('homie2-config');
 var homie2 = new Homie2Config();
 ```
 
-If you want to set the url you can do it this way:
+If you want to set the url/ip you can do it this way:
 
 `var homie2 = new Homie2Config({url: 'homie.local'});`
 
